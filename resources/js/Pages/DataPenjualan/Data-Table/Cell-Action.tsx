@@ -1,7 +1,5 @@
-import { Edit, Edit2Icon, Image, MoreHorizontal, Newspaper, SaveIcon, Trash2Icon, UploadCloudIcon } from 'lucide-react'
-import { useState } from 'react'
-
-import { Button } from '@/Components/shadcn/ui/button'
+import { BadgePlusIcon, Edit, Edit2Icon, Image, MoreHorizontal, Newspaper, SaveIcon, Trash2Icon, UploadCloudIcon } from 'lucide-react'
+import { Button, buttonVariants } from '@/Components/shadcn/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,15 +13,13 @@ import toast from 'react-hot-toast'
 
 interface CellActionProps {
   data: Transaksi
+  onEdit: () => void;
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-
-  const [open, setOpen] = useState(false)
-
-  const onUpdate = () => {
-    setOpen(true)
-  }
+export const CellAction: React.FC<CellActionProps> = ({ data, onEdit }) => {
+    const handleEdit = async () => {
+        onEdit();
+      };
 
   const onDelete = async () => {
     try {
@@ -31,14 +27,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         method: 'DELETE',
       });
       if (response.ok) {
-        // Jika berhasil, perbarui UI atau lakukan tindakan yang sesuai
         toast.success('Transaksi berhasil dihapus');
       } else {
-        // Jika gagal, tangani kesalahan atau berikan respons yang sesuai kepada pengguna
         toast.error('Gagal menghapus transaksi');
       }
     } catch (error) {
-      // Tangani kesalahan jika ada kesalahan saat melakukan permintaan
       console.error('Error:', error);
     }
   };
@@ -54,7 +47,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end'>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem className='cursor-pointer' onClick={onUpdate}>
+            <DropdownMenuItem className='cursor-pointer' onClick={handleEdit}>
               <Edit2Icon className='mr-2 h-4 w-4' />
               Update
             </DropdownMenuItem>
@@ -64,6 +57,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
     </>
   )
 }

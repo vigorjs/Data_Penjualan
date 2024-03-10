@@ -34,6 +34,15 @@ function Index() {
         const response2 = await fetch('/api/barang');
         const data2 = await response2.json();
         setBarang(data2.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    fetchData();
+  }, []);
+  useEffect(() => {
+    async function fetchData() {
+      try {
         const response = await fetch('/api/transaksi');
         const data = await response.json();
         setTransaksi(data.data);
@@ -41,7 +50,6 @@ function Index() {
         console.error('Error fetching data:', error);
       }
     }
-
     fetchData();
   }, [barang, transaksi]);
 
