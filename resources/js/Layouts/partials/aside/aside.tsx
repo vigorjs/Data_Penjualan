@@ -1,12 +1,14 @@
 import React, { PropsWithChildren } from 'react';
 
-import { InertiaLinkProps, Link } from '@inertiajs/react';
+import { InertiaLinkProps, Link, router, usePage } from '@inertiajs/react';
 import { cn } from '@/lib/utils';
 import ApplicationLogo from '@/Components/ApplicationLogo';
-import { ChevronDownCircleIcon, GlobeIcon, LayoutDashboardIcon, LogOutIcon, MessageCircleQuestionIcon, Settings2Icon } from 'lucide-react';
-import { Separator } from '@radix-ui/react-dropdown-menu';
+import { BarChartBigIcon, ChevronDownCircleIcon, GlobeIcon, LayoutDashboardIcon, LogOutIcon, MessageCircleQuestionIcon, Settings2Icon } from 'lucide-react';
+import { PageProps } from '@/types';
 
 export function Aside() {
+    const { auth, role } = usePage<PageProps>().props;
+    console.log(role);
     return (
         <nav className='lg:flex hidden items-start min-h-screen border-r w-80 p-8 shrink-0'>
             <ul className='flex gap-y-1 flex-col w-full sticky top-12'>
@@ -19,20 +21,20 @@ export function Aside() {
                     <LayoutDashboardIcon />
                     <span>Dashboard</span>
                 </AsideLink>
+                {role === 'admin' &&
+                <AsideLink active={route().current('dataPenjualan.index')} href={route('dataPenjualan.index')}>
+                    <BarChartBigIcon />
+                    <span>Data Penjualan</span>
+                </AsideLink>
+                }
                 <AsideLink active={route().current('profile.edit')} href={route('profile.edit')}>
                     <Settings2Icon />
                     <span>User Settings</span>
                 </AsideLink>
-                <AsideLabel>
-                    <ChevronDownCircleIcon />
-                    <span>Resources</span>
-                </AsideLabel>
-                <Separator/>
-                <li  className='py-2'>
-                    <AsideLink href={route('logout')}>
-                        <span>Log Out</span>
-                    </AsideLink>
-                </li>
+                <li className='py-2'/>
+                <AsideLink onClick={() => router.post(route('logout'))} href='/'>
+                    <span>Log Out</span>
+                </AsideLink>
             </ul>
         </nav>
     );
