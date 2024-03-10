@@ -7,17 +7,17 @@ import { Transaksi } from '@/types';
 import { DataTable } from './Data-Table/Data-Table';
 import { columns } from './Data-Table/Columns';
 import { Toaster } from 'react-hot-toast';
-import { Button } from '@/Components/shadcn/ui/button';
+import { Button, buttonVariants } from '@/Components/shadcn/ui/button';
 import { BadgePlusIcon } from 'lucide-react';
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
   } from "@/Components/shadcn/ui/dialog"
 import FormTransaksi from '@/Components/FormTransaksi';
+import { cn } from '@/lib/utils';
 
 interface Option {
     id: number;
@@ -27,24 +27,13 @@ interface Option {
 
 function Index() {
   const [barang, setBarang] = useState<Option[]>([]);
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch('/api/barang');
-        const data = await response.json();
-        setBarang(data.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    }
-
-    fetchData();
-  }, []);
-
   const [transaksi, setTransaksi] = useState<Transaksi[]>([]);
   useEffect(() => {
     async function fetchData() {
       try {
+        const response2 = await fetch('/api/barang');
+        const data2 = await response2.json();
+        setBarang(data2.data);
         const response = await fetch('/api/transaksi');
         const data = await response.json();
         setTransaksi(data.data);
@@ -62,6 +51,10 @@ function Index() {
       setIsDialogOpen(false);
   };
 
+//   const handleEdit = (transaksi: Transaksi) => {
+//     setIsDialogOpen(true);
+//   };
+
   return (
     <>
       <Head title='Index' />
@@ -72,13 +65,11 @@ function Index() {
             title='Data Penjualan'
             />
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger >
-                    <Button
-                        variant={'secondary'}
-                        className='bg-secondary/50 hover:bg-secondary/60 border m-6'>
-                        <BadgePlusIcon className='mr-2 h-4 w-4' />
-                        Tambah Transaksi
-                    </Button>
+                <DialogTrigger
+                    className={cn(buttonVariants({variant: 'secondary'}),'bg-secondary/50 hover:bg-secondary/60 border m-6')}
+                >
+                    <BadgePlusIcon className='mr-2 h-4 w-4' />
+                    Tambah Transaksi
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
@@ -89,7 +80,7 @@ function Index() {
             </Dialog>
         </div>
         <CardContent>
-            <DataTable columns={columns} data={transaksi} />
+            <DataTable columns={columns} data={transaksi}/>
         </CardContent>
       </Card>
     </>
