@@ -26,21 +26,6 @@ interface Option {
 }
 
 function Index() {
-  const [transaksi, setTransaksi] = useState<Transaksi[]>([]);
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch('/api/transaksi');
-        const data = await response.json();
-        setTransaksi(data.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    }
-
-    fetchData();
-  }, [transaksi]);
-
   const [barang, setBarang] = useState<Option[]>([]);
   useEffect(() => {
     async function fetchData() {
@@ -54,7 +39,28 @@ function Index() {
     }
 
     fetchData();
-  }, [barang]);
+  }, []);
+
+  const [transaksi, setTransaksi] = useState<Transaksi[]>([]);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/transaksi');
+        const data = await response.json();
+        setTransaksi(data.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+    fetchData();
+  }, [barang, transaksi]);
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleDialogClose = () => {
+      setIsDialogOpen(false);
+  };
 
   return (
     <>
@@ -65,8 +71,8 @@ function Index() {
             <CardSectionTitle
             title='Data Penjualan'
             />
-            <Dialog>
-                <DialogTrigger>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger >
                     <Button
                         variant={'secondary'}
                         className='bg-secondary/50 hover:bg-secondary/60 border m-6'>
@@ -77,7 +83,7 @@ function Index() {
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Tambah Transaksi</DialogTitle>
-                        <FormTransaksi options={barang}/>
+                        <FormTransaksi options={barang} setIsDialogOpen={handleDialogClose}/>
                     </DialogHeader>
                 </DialogContent>
             </Dialog>

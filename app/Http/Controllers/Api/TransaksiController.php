@@ -28,7 +28,7 @@ class TransaksiController extends Controller
         $barang->stok -= $validatedData['quantity'];
         $barang->save();
 
-        return response()->json('Transaksi berhasil dibuat!');
+        return to_route('dataPenjualan.index')->with('message', 'Data berhasil dibuat');
     }
 
     public function show(Transaksi $transaksi){
@@ -52,7 +52,7 @@ class TransaksiController extends Controller
         $barang->stok -= $newQuantity;
         $barang->save();
 
-        return response()->json('Transaksi berhasil diupdate!');
+        return to_route('dataPenjualan.index')->with('message', 'Data berhasil diupdate');
     }
 
     public function destroy(Transaksi $transaksi){
@@ -63,6 +63,6 @@ class TransaksiController extends Controller
         $barang->save();
 
         $transaksi->delete();
-        return response()->json('Transaksi berhasil di hapus!');
+        return to_route('dataPenjualan.index')->with('message', 'Data berhasil dihapus');
     }
 }

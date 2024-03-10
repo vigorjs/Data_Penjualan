@@ -8,7 +8,6 @@ import { PageProps } from '@/types';
 
 export function Aside() {
     const { auth, role } = usePage<PageProps>().props;
-    console.log(role);
     return (
         <nav className='lg:flex hidden items-start min-h-screen border-r w-80 p-8 shrink-0'>
             <ul className='flex gap-y-1 flex-col w-full sticky top-12'>

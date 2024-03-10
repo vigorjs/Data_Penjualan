@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { router } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import { Transaksi } from '@/types';
 import { Input } from './shadcn/ui/input';
 import { Button } from './shadcn/ui/button';
 import toast from 'react-hot-toast';
+import { Label } from './shadcn/ui/label';
 
 export interface PostTransaksi {
     id_barang: number;
@@ -18,8 +19,8 @@ interface Option {
     stok: number;
 }
 
-const FormTransaksi = ({ options }: { options: Option[] }) => {
-    const [formData, setFormData] = useState<PostTransaksi>({
+const FormTransaksi = ({ options, setIsDialogOpen }: { options: Option[], setIsDialogOpen: (value: boolean) => void }) => {
+    const { data, setData, post, processing, errors } = useForm<PostTransaksi>({
         id_barang: 0,
         quantity: 0,
         tgl_transaksi: '',
@@ -27,7 +28,7 @@ const FormTransaksi = ({ options }: { options: Option[] }) => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData((prevData) => ({
+        setData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
@@ -36,42 +37,52 @@ const FormTransaksi = ({ options }: { options: Option[] }) => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            await router.post('/api/transaksi', formData); // Menggunakan objek JSON langsung
-            toast.success('Data berhasil dibuat');
+            if (processing) {
+                return toast.error('Error :', errors);
+            }
+            await post('/api/transaksi');
+            toast.success('Transaksi berhasil disimpan');
+            setIsDialogOpen(false); // Close the dialog
         } catch (error) {
             console.error('Error submitting form:', error);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
             <select
                 name="id_barang"
-                value={formData.id_barang}
+                value={data.id_barang}
                 onChange={handleChange}
-                className='w-full'
+                className='w-full rounded border py-2'
             >
                 <option value="">Pilih Barang</option>
                 {options.map((option) => (
-                <option key={option.id} value={option.id}>
-                    {option.nama_barang} - {option.stok}
-                </option>
+                    <option key={option.id} value={option.id}>
+                        {option.nama_barang} - {option.stok}
+                    </option>
                 ))}
             </select>
-            <Input
-                type="number"
-                name="quantity"
-                placeholder="Quantity"
-                value={formData.quantity.toString()}
-                onChange={handleChange}
-            />
-            <Input
-                type="date"
-                name="tgl_transaksi"
-                value={formData.tgl_transaksi}
-                onChange={handleChange}
-            />
-            <Button type="submit">Simpan</Button>
+            <div className="grid w-full items-center gap-1.5">
+                <Label htmlFor="quantity">Quantity</Label>
+                <Input
+                    type="number"
+                    name="quantity"
+                    placeholder="Quantity"
+                    value={data.quantity.toString()}
+                    onChange={handleChange}
+                />
+                <Label htmlFor="tgl_transaksi">Tanggal Transaksi</Label>
+            </div>
+            <div className="grid w-full items-center gap-1.5">
+                <Input
+                    type="date"
+                    name="tgl_transaksi"
+                    value={data.tgl_transaksi}
+                    onChange={handleChange}
+                />
+                <Button type="submit">Simpan</Button>
+            </div>
         </form>
     );
 };

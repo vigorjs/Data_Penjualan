@@ -12,7 +12,6 @@ import {
 
 import { Transaksi } from '@/types'
 import toast from 'react-hot-toast'
-import { router } from '@inertiajs/react'
 
 interface CellActionProps {
   data: Transaksi
