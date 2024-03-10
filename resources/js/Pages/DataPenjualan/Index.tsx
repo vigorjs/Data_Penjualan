@@ -19,6 +19,12 @@ import {
   } from "@/Components/shadcn/ui/dialog"
 import FormTransaksi from '@/Components/FormTransaksi';
 
+interface Option {
+    id: number;
+    nama_barang: string;
+    stok: number;
+}
+
 function Index() {
   const [transaksi, setTransaksi] = useState<Transaksi[]>([]);
   useEffect(() => {
@@ -34,6 +40,21 @@ function Index() {
 
     fetchData();
   }, [transaksi]);
+
+  const [barang, setBarang] = useState<Option[]>([]);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch('/api/barang');
+        const data = await response.json();
+        setBarang(data.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+    fetchData();
+  }, [barang]);
 
   return (
     <>
@@ -56,7 +77,7 @@ function Index() {
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Tambah Transaksi</DialogTitle>
-                        <FormTransaksi options={}/>
+                        <FormTransaksi options={barang}/>
                     </DialogHeader>
                 </DialogContent>
             </Dialog>

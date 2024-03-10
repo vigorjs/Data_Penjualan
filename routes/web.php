@@ -42,10 +42,7 @@ Route::middleware('auth')->group(function () {
 //Data Penjualan routes
 Route::middleware(['auth', 'role:admin'])->group(function (){
     Route::get('/data-penjualan', function () {
-        $barang = Barang::get()->all();
-        return Inertia::render('DataPenjualan/Index', [
-            'option' => $barang
-        ]);
+        return Inertia::render('DataPenjualan/Index');
     })->name('dataPenjualan.index');
 });
 

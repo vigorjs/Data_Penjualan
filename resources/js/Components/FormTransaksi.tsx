@@ -51,7 +51,7 @@ const FormTransaksi = ({ options }: { options: Option[] }) => {
                 onChange={handleChange}
                 className='w-full'
             >
-                <option value="">Pilih ID Barang</option>
+                <option value="">Pilih Barang</option>
                 {options.map((option) => (
                 <option key={option.id} value={option.id}>
                     {option.nama_barang} - {option.stok}
