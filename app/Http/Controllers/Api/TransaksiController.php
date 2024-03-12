@@ -8,6 +8,7 @@ use App\Http\Resources\TransaksiResource;
 use App\Models\Barang;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
+use Inertia\Ssr\Response;
 
 class TransaksiController extends Controller
 {
@@ -63,6 +64,6 @@ class TransaksiController extends Controller
         $barang->save();
 
         $transaksi->delete();
-        return to_route('dataPenjualan.index')->with('message', 'Data berhasil dihapus');
+        return response()->json('Data berhasil dihapus Kurang!');
     }
 }

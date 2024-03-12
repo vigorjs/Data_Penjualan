@@ -1,4 +1,4 @@
-import { BadgePlusIcon, Edit, Edit2Icon, Image, MoreHorizontal, Newspaper, SaveIcon, Trash2Icon, UploadCloudIcon } from 'lucide-react'
+import { Edit2Icon, MoreHorizontal, Trash2Icon } from 'lucide-react'
 import { Button, buttonVariants } from '@/Components/shadcn/ui/button'
 import {
   DropdownMenu,
@@ -10,16 +10,15 @@ import {
 
 import { Transaksi } from '@/types'
 import toast from 'react-hot-toast'
+import useDialogStore from '@/States/useDialogState'
 
 interface CellActionProps {
   data: Transaksi
-  onEdit: () => void;
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ data, onEdit }) => {
-    const handleEdit = async () => {
-        onEdit();
-      };
+export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+
+  const { setIsDialogOpen } = useDialogStore();
 
   const onDelete = async () => {
     try {
@@ -47,7 +46,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, onEdit }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end'>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem className='cursor-pointer' onClick={handleEdit}>
+            <DropdownMenuItem className='cursor-pointer' onClick={() => setIsDialogOpen(true)}>
               <Edit2Icon className='mr-2 h-4 w-4' />
               Update
             </DropdownMenuItem>

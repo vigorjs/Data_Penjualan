@@ -18,50 +18,34 @@ import {
   } from "@/Components/shadcn/ui/dialog"
 import FormTransaksi from '@/Components/FormTransaksi';
 import { cn } from '@/lib/utils';
-
-interface Option {
-    id: number;
-    nama_barang: string;
-    stok: number;
-}
+import useDialogStore from '@/States/useDialogState';
 
 function Index() {
-  const [barang, setBarang] = useState<Option[]>([]);
   const [transaksi, setTransaksi] = useState<Transaksi[]>([]);
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response2 = await fetch('/api/barang');
-        const data2 = await response2.json();
-        setBarang(data2.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    }
-    fetchData();
-  }, []);
+
   useEffect(() => {
     async function fetchData() {
       try {
         const response = await fetch('/api/transaksi');
+        if (!response.ok) {
+          throw new Error('Terjadi kesalahan saat fetch data error');
+        }
         const data = await response.json();
+        await new Promise(resolve => setTimeout(resolve, 500));
         setTransaksi(data.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     }
     fetchData();
-  }, [barang, transaksi]);
+  }, [transaksi]);
 
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const {isDialogOpen, setIsDialogOpen} = useDialogStore();
 
   const handleDialogClose = () => {
       setIsDialogOpen(false);
   };
 
-//   const handleEdit = (transaksi: Transaksi) => {
-//     setIsDialogOpen(true);
-//   };
 
   return (
     <>
@@ -72,25 +56,28 @@ function Index() {
             <CardSectionTitle
             title='Data Penjualan'
             />
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger
-                    className={cn(buttonVariants({variant: 'secondary'}),'bg-secondary/50 hover:bg-secondary/60 border m-6')}
-                >
-                    <BadgePlusIcon className='mr-2 h-4 w-4' />
-                    Tambah Transaksi
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Tambah Transaksi</DialogTitle>
-                        <FormTransaksi options={barang} setIsDialogOpen={handleDialogClose}/>
-                    </DialogHeader>
-                </DialogContent>
-            </Dialog>
+            <Button
+                variant={'secondary'}
+                className='bg-secondary/50 hover:bg-secondary/60 border m-6'
+                onClick={() => setIsDialogOpen(true)}
+            >
+                <BadgePlusIcon className='mr-2 h-4 w-4' />
+                Tambah Transaksi
+            </Button>
         </div>
         <CardContent>
             <DataTable columns={columns} data={transaksi}/>
         </CardContent>
       </Card>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent>
+              <DialogHeader>
+                  <DialogTitle>Tambah Transaksi</DialogTitle>
+                  <FormTransaksi setIsDialogOpen={handleDialogClose}/>
+              </DialogHeader>
+          </DialogContent>
+      </Dialog>
     </>
   );
 }

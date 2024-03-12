@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { router, useForm } from '@inertiajs/react';
-import { Transaksi } from '@/types';
+import { useEffect, useState } from 'react';
+import { useForm } from '@inertiajs/react';
 import { Input } from './shadcn/ui/input';
 import { Button } from './shadcn/ui/button';
 import toast from 'react-hot-toast';
@@ -13,13 +12,33 @@ export interface PostTransaksi {
     [key: string]: string | number;
 }
 
-interface Option {
+interface Barang {
     id: number;
     nama_barang: string;
     stok: number;
 }
 
-const FormTransaksi = ({ options, setIsDialogOpen }: { options: Option[], setIsDialogOpen: (value: boolean) => void }) => {
+const FormTransaksi = ({ setIsDialogOpen }: { setIsDialogOpen: (value: boolean) => void }) => {
+
+    const [barang, setBarang] = useState<Barang[]>([]);
+
+    useEffect(() => {
+        async function fetchData() {
+        try {
+            const response = await fetch('/api/barang');
+            if (!response.ok) {
+                throw new Error('Terjadi kesalahan saat fetch data error');
+              }
+            const data = await response.json();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            setBarang(data.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+        }
+        fetchData();
+    }, []);
+
     const { data, setData, post, processing, errors } = useForm<PostTransaksi>({
         id_barang: 0,
         quantity: 0,
@@ -42,7 +61,7 @@ const FormTransaksi = ({ options, setIsDialogOpen }: { options: Option[], setIsD
             }
             await post('/api/transaksi');
             toast.success('Transaksi berhasil disimpan');
-            setIsDialogOpen(false); // Close the dialog
+            setIsDialogOpen(false);
         } catch (error) {
             console.error('Error submitting form:', error);
         }
@@ -57,7 +76,7 @@ const FormTransaksi = ({ options, setIsDialogOpen }: { options: Option[], setIsD
                 className='w-full rounded border py-2'
             >
                 <option value="">Pilih Barang</option>
-                {options.map((option) => (
+                {barang.map((option) => (
                     <option key={option.id} value={option.id}>
                         {option.nama_barang} - {option.stok}
                     </option>
