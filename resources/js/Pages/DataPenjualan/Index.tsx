@@ -14,15 +14,15 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
   } from "@/Components/shadcn/ui/dialog"
 import FormTransaksi from '@/Components/FormTransaksi';
-import { cn } from '@/lib/utils';
 import useDialogStore from '@/States/useDialogState';
 
 function Index() {
-  const [transaksi, setTransaksi] = useState<Transaksi[]>([]);
 
+  const { isDialogOpen, setIsDialogOpen } = useDialogStore();
+
+  const [transaksi, setTransaksi] = useState<Transaksi[]>([]);
   useEffect(() => {
     async function fetchData() {
       try {
@@ -31,21 +31,15 @@ function Index() {
           throw new Error('Terjadi kesalahan saat fetch data error');
         }
         const data = await response.json();
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 2500));
         setTransaksi(data.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     }
-    fetchData();
+        fetchData();
+
   }, [transaksi]);
-
-  const {isDialogOpen, setIsDialogOpen} = useDialogStore();
-
-  const handleDialogClose = () => {
-      setIsDialogOpen(false);
-  };
-
 
   return (
     <>
@@ -74,7 +68,7 @@ function Index() {
           <DialogContent>
               <DialogHeader>
                   <DialogTitle>Tambah Transaksi</DialogTitle>
-                  <FormTransaksi setIsDialogOpen={handleDialogClose}/>
+                  <FormTransaksi />
               </DialogHeader>
           </DialogContent>
       </Dialog>

@@ -1,32 +1,31 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { Transaksi } from '@/types';
 import { CellAction } from './Cell-Action';
-
+import { Transaksi } from '@/types';
 
 export const columns: ColumnDef<Transaksi>[] = [
   {
     accessorKey: "nama_barang",
-    header: "nama_barang",
+    header: "Nama Barang",
   },
   {
     accessorKey: "stok",
-    header: "stok",
+    header: "Stok",
   },
   {
     accessorKey: "jumlah_terjual",
-    header: "jumlah_terjual",
+    header: "Jumlah Terjual",
   },
   {
     accessorKey: "tgl_transaksi",
-    header: "tgl_transaksi",
+    header: "Tgl Transaksi",
   },
   {
     accessorKey: "jenis_barang",
-    header: "jenis_barang",
+    header: "Jenis Barang",
   },
   {
     accessorKey: '',
     id: 'actions',
-    cell: ({ row }) => <CellAction data={{ ...row.original, id: row.original.id }} />,
+    cell: ({ row }) => <CellAction data={{ ...row.original }} />,
   },
 ]

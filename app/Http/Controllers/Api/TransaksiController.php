@@ -7,13 +7,12 @@ use App\Http\Requests\StoreTransaksiRequest;
 use App\Http\Resources\TransaksiResource;
 use App\Models\Barang;
 use App\Models\Transaksi;
-use Illuminate\Http\Request;
-use Inertia\Ssr\Response;
+use Inertia\Inertia;
 
 class TransaksiController extends Controller
 {
     public function index(){
-        return TransaksiResource::collection(Transaksi::paginate());
+        return TransaksiResource::collection(Transaksi::simplePaginate());
     }
 
     public function store(StoreTransaksiRequest $request){

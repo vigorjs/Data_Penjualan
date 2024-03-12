@@ -4,6 +4,7 @@ import { Input } from './shadcn/ui/input';
 import { Button } from './shadcn/ui/button';
 import toast from 'react-hot-toast';
 import { Label } from './shadcn/ui/label';
+import useDialogStore from '@/States/useDialogState';
 
 export interface PostTransaksi {
     id_barang: number;
@@ -18,10 +19,11 @@ interface Barang {
     stok: number;
 }
 
-const FormTransaksi = ({ setIsDialogOpen }: { setIsDialogOpen: (value: boolean) => void }) => {
+
+const FormTransaksi = () => {
+    const {isDialogOpen, setIsDialogOpen} = useDialogStore();
 
     const [barang, setBarang] = useState<Barang[]>([]);
-
     useEffect(() => {
         async function fetchData() {
         try {
@@ -30,14 +32,16 @@ const FormTransaksi = ({ setIsDialogOpen }: { setIsDialogOpen: (value: boolean) 
                 throw new Error('Terjadi kesalahan saat fetch data error');
               }
             const data = await response.json();
-            await new Promise(resolve => setTimeout(resolve, 500));
+            await new Promise(resolve => setTimeout(resolve, 1000));
             setBarang(data.data);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
         }
-        fetchData();
-    }, []);
+        if (isDialogOpen){
+            fetchData();
+        }
+    }, [isDialogOpen]);
 
     const { data, setData, post, processing, errors } = useForm<PostTransaksi>({
         id_barang: 0,

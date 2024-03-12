@@ -15,7 +15,7 @@ class BarangController extends Controller
      */
     public function index()
     {
-        return BarangResource::collection(Barang::paginate());
+        return BarangResource::collection(Barang::simplePaginate());
     }
 
     /**

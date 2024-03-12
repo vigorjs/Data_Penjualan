@@ -1,5 +1,5 @@
 import { Edit2Icon, MoreHorizontal, Trash2Icon } from 'lucide-react'
-import { Button, buttonVariants } from '@/Components/shadcn/ui/button'
+import { Button } from '@/Components/shadcn/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +11,7 @@ import {
 import { Transaksi } from '@/types'
 import toast from 'react-hot-toast'
 import useDialogStore from '@/States/useDialogState'
+
 
 interface CellActionProps {
   data: Transaksi
